@@ -16,9 +16,19 @@ import { Route as MinecraftRouteImport } from './routes/minecraft'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as VpsRouteImport } from './routes/vps'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as AuthenticatedCheckoutRouteImport } from './routes/_authenticated/checkout'
 import { Route as AuthenticatedFreeRouteImport } from './routes/_authenticated/free'
+import { Route as AuthenticatedPaymentsRouteImport } from './routes/_authenticated/payments'
+import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
+import { Route as AuthenticatedAdminPaymentsRouteImport } from './routes/_authenticated/admin.payments'
+import { Route as AuthenticatedAdminRedeemcodesRouteImport } from './routes/_authenticated/admin.redeemcodes'
+import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin.users'
 import { Route as AuthenticatedFreeIndexRouteImport } from './routes/_authenticated/free.index'
 import { Route as AuthenticatedFreeAfkRouteImport } from './routes/_authenticated/free.afk'
+import { Route as AuthenticatedFreeCreateRouteImport } from './routes/_authenticated/free.create'
+import { Route as AuthenticatedFreeJoinRouteImport } from './routes/_authenticated/free.join'
+import { Route as AuthenticatedFreeRedeemRouteImport } from './routes/_authenticated/free.redeem'
 import { Route as AuthenticatedFreeShopRouteImport } from './routes/_authenticated/free.shop'
 
 const IndexRoute = IndexRouteImport.update({
@@ -55,10 +65,47 @@ const VpsRoute = VpsRouteImport.update({
   path: '/vps',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedCheckoutRoute = AuthenticatedCheckoutRouteImport.update({
+  id: '/checkout',
+  path: '/checkout',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedFreeRoute = AuthenticatedFreeRouteImport.update({
   id: '/free',
   path: '/free',
   getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedPaymentsRoute = AuthenticatedPaymentsRouteImport.update({
+  id: '/payments',
+  path: '/payments',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
+const AuthenticatedAdminPaymentsRoute =
+  AuthenticatedAdminPaymentsRouteImport.update({
+    id: '/payments',
+    path: '/payments',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminRedeemcodesRoute =
+  AuthenticatedAdminRedeemcodesRouteImport.update({
+    id: '/redeemcodes',
+    path: '/redeemcodes',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
 const AuthenticatedFreeIndexRoute = AuthenticatedFreeIndexRouteImport.update({
   id: '/',
@@ -68,6 +115,21 @@ const AuthenticatedFreeIndexRoute = AuthenticatedFreeIndexRouteImport.update({
 const AuthenticatedFreeAfkRoute = AuthenticatedFreeAfkRouteImport.update({
   id: '/afk',
   path: '/afk',
+  getParentRoute: () => AuthenticatedFreeRoute,
+} as any)
+const AuthenticatedFreeCreateRoute = AuthenticatedFreeCreateRouteImport.update({
+  id: '/create',
+  path: '/create',
+  getParentRoute: () => AuthenticatedFreeRoute,
+} as any)
+const AuthenticatedFreeJoinRoute = AuthenticatedFreeJoinRouteImport.update({
+  id: '/join',
+  path: '/join',
+  getParentRoute: () => AuthenticatedFreeRoute,
+} as any)
+const AuthenticatedFreeRedeemRoute = AuthenticatedFreeRedeemRouteImport.update({
+  id: '/redeem',
+  path: '/redeem',
   getParentRoute: () => AuthenticatedFreeRoute,
 } as any)
 const AuthenticatedFreeShopRoute = AuthenticatedFreeShopRouteImport.update({
@@ -83,9 +145,19 @@ export interface FileRoutesByFullPath {
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
   '/vps': typeof VpsRoute
+  '/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/checkout': typeof AuthenticatedCheckoutRoute
   '/free': typeof AuthenticatedFreeRouteWithChildren
+  '/payments': typeof AuthenticatedPaymentsRoute
+  '/admin/payments': typeof AuthenticatedAdminPaymentsRoute
+  '/admin/redeemcodes': typeof AuthenticatedAdminRedeemcodesRoute
+  '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/free/afk': typeof AuthenticatedFreeAfkRoute
+  '/free/create': typeof AuthenticatedFreeCreateRoute
+  '/free/join': typeof AuthenticatedFreeJoinRoute
+  '/free/redeem': typeof AuthenticatedFreeRedeemRoute
   '/free/shop': typeof AuthenticatedFreeShopRoute
+  '/admin/': typeof AuthenticatedAdminIndexRoute
   '/free/': typeof AuthenticatedFreeIndexRoute
 }
 export interface FileRoutesByTo {
@@ -95,8 +167,17 @@ export interface FileRoutesByTo {
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
   '/vps': typeof VpsRoute
+  '/checkout': typeof AuthenticatedCheckoutRoute
+  '/payments': typeof AuthenticatedPaymentsRoute
+  '/admin/payments': typeof AuthenticatedAdminPaymentsRoute
+  '/admin/redeemcodes': typeof AuthenticatedAdminRedeemcodesRoute
+  '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/free/afk': typeof AuthenticatedFreeAfkRoute
+  '/free/create': typeof AuthenticatedFreeCreateRoute
+  '/free/join': typeof AuthenticatedFreeJoinRoute
+  '/free/redeem': typeof AuthenticatedFreeRedeemRoute
   '/free/shop': typeof AuthenticatedFreeShopRoute
+  '/admin': typeof AuthenticatedAdminIndexRoute
   '/free': typeof AuthenticatedFreeIndexRoute
 }
 export interface FileRoutesById {
@@ -108,9 +189,19 @@ export interface FileRoutesById {
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
   '/vps': typeof VpsRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/_authenticated/checkout': typeof AuthenticatedCheckoutRoute
   '/_authenticated/free': typeof AuthenticatedFreeRouteWithChildren
+  '/_authenticated/payments': typeof AuthenticatedPaymentsRoute
+  '/_authenticated/admin/payments': typeof AuthenticatedAdminPaymentsRoute
+  '/_authenticated/admin/redeemcodes': typeof AuthenticatedAdminRedeemcodesRoute
+  '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
   '/_authenticated/free/afk': typeof AuthenticatedFreeAfkRoute
+  '/_authenticated/free/create': typeof AuthenticatedFreeCreateRoute
+  '/_authenticated/free/join': typeof AuthenticatedFreeJoinRoute
+  '/_authenticated/free/redeem': typeof AuthenticatedFreeRedeemRoute
   '/_authenticated/free/shop': typeof AuthenticatedFreeShopRoute
+  '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/free/': typeof AuthenticatedFreeIndexRoute
 }
 export interface FileRouteTypes {
@@ -122,9 +213,19 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/terms'
     | '/vps'
+    | '/admin'
+    | '/checkout'
     | '/free'
+    | '/payments'
+    | '/admin/payments'
+    | '/admin/redeemcodes'
+    | '/admin/users'
     | '/free/afk'
+    | '/free/create'
+    | '/free/join'
+    | '/free/redeem'
     | '/free/shop'
+    | '/admin/'
     | '/free/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -134,8 +235,17 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/terms'
     | '/vps'
+    | '/checkout'
+    | '/payments'
+    | '/admin/payments'
+    | '/admin/redeemcodes'
+    | '/admin/users'
     | '/free/afk'
+    | '/free/create'
+    | '/free/join'
+    | '/free/redeem'
     | '/free/shop'
+    | '/admin'
     | '/free'
   id:
     | '__root__'
@@ -146,9 +256,19 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/terms'
     | '/vps'
+    | '/_authenticated/admin'
+    | '/_authenticated/checkout'
     | '/_authenticated/free'
+    | '/_authenticated/payments'
+    | '/_authenticated/admin/payments'
+    | '/_authenticated/admin/redeemcodes'
+    | '/_authenticated/admin/users'
     | '/_authenticated/free/afk'
+    | '/_authenticated/free/create'
+    | '/_authenticated/free/join'
+    | '/_authenticated/free/redeem'
     | '/_authenticated/free/shop'
+    | '/_authenticated/admin/'
     | '/_authenticated/free/'
   fileRoutesById: FileRoutesById
 }
@@ -213,12 +333,61 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VpsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/checkout': {
+      id: '/_authenticated/checkout'
+      path: '/checkout'
+      fullPath: '/checkout'
+      preLoaderRoute: typeof AuthenticatedCheckoutRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/free': {
       id: '/_authenticated/free'
       path: '/free'
       fullPath: '/free'
       preLoaderRoute: typeof AuthenticatedFreeRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/payments': {
+      id: '/_authenticated/payments'
+      path: '/payments'
+      fullPath: '/payments'
+      preLoaderRoute: typeof AuthenticatedPaymentsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin/': {
+      id: '/_authenticated/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/payments': {
+      id: '/_authenticated/admin/payments'
+      path: '/payments'
+      fullPath: '/admin/payments'
+      preLoaderRoute: typeof AuthenticatedAdminPaymentsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/redeemcodes': {
+      id: '/_authenticated/admin/redeemcodes'
+      path: '/redeemcodes'
+      fullPath: '/admin/redeemcodes'
+      preLoaderRoute: typeof AuthenticatedAdminRedeemcodesRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/users': {
+      id: '/_authenticated/admin/users'
+      path: '/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AuthenticatedAdminUsersRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/free/': {
       id: '/_authenticated/free/'
@@ -234,6 +403,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedFreeAfkRouteImport
       parentRoute: typeof AuthenticatedFreeRoute
     }
+    '/_authenticated/free/create': {
+      id: '/_authenticated/free/create'
+      path: '/create'
+      fullPath: '/free/create'
+      preLoaderRoute: typeof AuthenticatedFreeCreateRouteImport
+      parentRoute: typeof AuthenticatedFreeRoute
+    }
+    '/_authenticated/free/join': {
+      id: '/_authenticated/free/join'
+      path: '/join'
+      fullPath: '/free/join'
+      preLoaderRoute: typeof AuthenticatedFreeJoinRouteImport
+      parentRoute: typeof AuthenticatedFreeRoute
+    }
+    '/_authenticated/free/redeem': {
+      id: '/_authenticated/free/redeem'
+      path: '/redeem'
+      fullPath: '/free/redeem'
+      preLoaderRoute: typeof AuthenticatedFreeRedeemRouteImport
+      parentRoute: typeof AuthenticatedFreeRoute
+    }
     '/_authenticated/free/shop': {
       id: '/_authenticated/free/shop'
       path: '/shop'
@@ -244,14 +434,37 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminPaymentsRoute: typeof AuthenticatedAdminPaymentsRoute
+  AuthenticatedAdminRedeemcodesRoute: typeof AuthenticatedAdminRedeemcodesRoute
+  AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
+  AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
+}
+
+const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminPaymentsRoute: AuthenticatedAdminPaymentsRoute,
+  AuthenticatedAdminRedeemcodesRoute: AuthenticatedAdminRedeemcodesRoute,
+  AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
+  AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
+}
+
+const AuthenticatedAdminRouteWithChildren =
+  AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
+
 interface AuthenticatedFreeRouteChildren {
   AuthenticatedFreeAfkRoute: typeof AuthenticatedFreeAfkRoute
+  AuthenticatedFreeCreateRoute: typeof AuthenticatedFreeCreateRoute
+  AuthenticatedFreeJoinRoute: typeof AuthenticatedFreeJoinRoute
+  AuthenticatedFreeRedeemRoute: typeof AuthenticatedFreeRedeemRoute
   AuthenticatedFreeShopRoute: typeof AuthenticatedFreeShopRoute
   AuthenticatedFreeIndexRoute: typeof AuthenticatedFreeIndexRoute
 }
 
 const AuthenticatedFreeRouteChildren: AuthenticatedFreeRouteChildren = {
   AuthenticatedFreeAfkRoute: AuthenticatedFreeAfkRoute,
+  AuthenticatedFreeCreateRoute: AuthenticatedFreeCreateRoute,
+  AuthenticatedFreeJoinRoute: AuthenticatedFreeJoinRoute,
+  AuthenticatedFreeRedeemRoute: AuthenticatedFreeRedeemRoute,
   AuthenticatedFreeShopRoute: AuthenticatedFreeShopRoute,
   AuthenticatedFreeIndexRoute: AuthenticatedFreeIndexRoute,
 }
@@ -260,11 +473,17 @@ const AuthenticatedFreeRouteWithChildren =
   AuthenticatedFreeRoute._addFileChildren(AuthenticatedFreeRouteChildren)
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
+  AuthenticatedCheckoutRoute: typeof AuthenticatedCheckoutRoute
   AuthenticatedFreeRoute: typeof AuthenticatedFreeRouteWithChildren
+  AuthenticatedPaymentsRoute: typeof AuthenticatedPaymentsRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
+  AuthenticatedCheckoutRoute: AuthenticatedCheckoutRoute,
   AuthenticatedFreeRoute: AuthenticatedFreeRouteWithChildren,
+  AuthenticatedPaymentsRoute: AuthenticatedPaymentsRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
@@ -282,13 +501,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

@@ -38,10 +38,10 @@ function AfkPage() {
   async function doClaim() {
     try {
       const res = await claim({});
-      setEarned((e) => e + res.coins);
+      setEarned((e) => e + res.awarded);
       setSeconds(0);
       qc.invalidateQueries({ queryKey: ["profile"] });
-      toast.success(`+${res.coins} coins`);
+      toast.success(`+${res.awarded} coins`);
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Could not claim");
     }
