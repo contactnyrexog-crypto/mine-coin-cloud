@@ -16,6 +16,7 @@ import { Route as MinecraftRouteImport } from './routes/minecraft'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as VpsRouteImport } from './routes/vps'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedCheckoutRouteImport } from './routes/_authenticated/checkout'
 import { Route as AuthenticatedFreeRouteImport } from './routes/_authenticated/free'
 import { Route as AuthenticatedPaymentsRouteImport } from './routes/_authenticated/payments'
@@ -59,6 +60,11 @@ const VpsRoute = VpsRouteImport.update({
   id: '/vps',
   path: '/vps',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedCheckoutRoute = AuthenticatedCheckoutRouteImport.update({
   id: '/checkout',
@@ -113,6 +119,7 @@ export interface FileRoutesByFullPath {
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
   '/vps': typeof VpsRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/checkout': typeof AuthenticatedCheckoutRoute
   '/free': typeof AuthenticatedFreeRouteWithChildren
   '/payments': typeof AuthenticatedPaymentsRoute
@@ -130,6 +137,7 @@ export interface FileRoutesByTo {
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
   '/vps': typeof VpsRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/checkout': typeof AuthenticatedCheckoutRoute
   '/payments': typeof AuthenticatedPaymentsRoute
   '/free/afk': typeof AuthenticatedFreeAfkRoute
@@ -148,6 +156,7 @@ export interface FileRoutesById {
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
   '/vps': typeof VpsRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/checkout': typeof AuthenticatedCheckoutRoute
   '/_authenticated/free': typeof AuthenticatedFreeRouteWithChildren
   '/_authenticated/payments': typeof AuthenticatedPaymentsRoute
@@ -167,6 +176,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/terms'
     | '/vps'
+    | '/admin'
     | '/checkout'
     | '/free'
     | '/payments'
@@ -184,6 +194,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/terms'
     | '/vps'
+    | '/admin'
     | '/checkout'
     | '/payments'
     | '/free/afk'
@@ -201,6 +212,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/terms'
     | '/vps'
+    | '/_authenticated/admin'
     | '/_authenticated/checkout'
     | '/_authenticated/free'
     | '/_authenticated/payments'
@@ -272,6 +284,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/vps'
       preLoaderRoute: typeof VpsRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/checkout': {
       id: '/_authenticated/checkout'
@@ -361,12 +380,14 @@ const AuthenticatedFreeRouteWithChildren =
   AuthenticatedFreeRoute._addFileChildren(AuthenticatedFreeRouteChildren)
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
   AuthenticatedCheckoutRoute: typeof AuthenticatedCheckoutRoute
   AuthenticatedFreeRoute: typeof AuthenticatedFreeRouteWithChildren
   AuthenticatedPaymentsRoute: typeof AuthenticatedPaymentsRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
   AuthenticatedCheckoutRoute: AuthenticatedCheckoutRoute,
   AuthenticatedFreeRoute: AuthenticatedFreeRouteWithChildren,
   AuthenticatedPaymentsRoute: AuthenticatedPaymentsRoute,
