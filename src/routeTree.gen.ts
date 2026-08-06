@@ -20,6 +20,7 @@ import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedCheckoutRouteImport } from './routes/_authenticated/checkout'
 import { Route as AuthenticatedFreeRouteImport } from './routes/_authenticated/free'
 import { Route as AuthenticatedPaymentsRouteImport } from './routes/_authenticated/payments'
+import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as AuthenticatedFreeIndexRouteImport } from './routes/_authenticated/free.index'
 import { Route as AuthenticatedFreeAfkRouteImport } from './routes/_authenticated/free.afk'
 import { Route as AuthenticatedFreeCreateRouteImport } from './routes/_authenticated/free.create'
@@ -81,6 +82,11 @@ const AuthenticatedPaymentsRoute = AuthenticatedPaymentsRouteImport.update({
   path: '/payments',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
 const AuthenticatedFreeIndexRoute = AuthenticatedFreeIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -119,7 +125,7 @@ export interface FileRoutesByFullPath {
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
   '/vps': typeof VpsRoute
-  '/admin': typeof AuthenticatedAdminRoute
+  '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/checkout': typeof AuthenticatedCheckoutRoute
   '/free': typeof AuthenticatedFreeRouteWithChildren
   '/payments': typeof AuthenticatedPaymentsRoute
@@ -128,6 +134,7 @@ export interface FileRoutesByFullPath {
   '/free/join': typeof AuthenticatedFreeJoinRoute
   '/free/redeem': typeof AuthenticatedFreeRedeemRoute
   '/free/shop': typeof AuthenticatedFreeShopRoute
+  '/admin/': typeof AuthenticatedAdminIndexRoute
   '/free/': typeof AuthenticatedFreeIndexRoute
 }
 export interface FileRoutesByTo {
@@ -137,7 +144,6 @@ export interface FileRoutesByTo {
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
   '/vps': typeof VpsRoute
-  '/admin': typeof AuthenticatedAdminRoute
   '/checkout': typeof AuthenticatedCheckoutRoute
   '/payments': typeof AuthenticatedPaymentsRoute
   '/free/afk': typeof AuthenticatedFreeAfkRoute
@@ -145,6 +151,7 @@ export interface FileRoutesByTo {
   '/free/join': typeof AuthenticatedFreeJoinRoute
   '/free/redeem': typeof AuthenticatedFreeRedeemRoute
   '/free/shop': typeof AuthenticatedFreeShopRoute
+  '/admin': typeof AuthenticatedAdminIndexRoute
   '/free': typeof AuthenticatedFreeIndexRoute
 }
 export interface FileRoutesById {
@@ -156,7 +163,7 @@ export interface FileRoutesById {
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
   '/vps': typeof VpsRoute
-  '/_authenticated/admin': typeof AuthenticatedAdminRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/checkout': typeof AuthenticatedCheckoutRoute
   '/_authenticated/free': typeof AuthenticatedFreeRouteWithChildren
   '/_authenticated/payments': typeof AuthenticatedPaymentsRoute
@@ -165,6 +172,7 @@ export interface FileRoutesById {
   '/_authenticated/free/join': typeof AuthenticatedFreeJoinRoute
   '/_authenticated/free/redeem': typeof AuthenticatedFreeRedeemRoute
   '/_authenticated/free/shop': typeof AuthenticatedFreeShopRoute
+  '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/free/': typeof AuthenticatedFreeIndexRoute
 }
 export interface FileRouteTypes {
@@ -185,6 +193,7 @@ export interface FileRouteTypes {
     | '/free/join'
     | '/free/redeem'
     | '/free/shop'
+    | '/admin/'
     | '/free/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -194,7 +203,6 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/terms'
     | '/vps'
-    | '/admin'
     | '/checkout'
     | '/payments'
     | '/free/afk'
@@ -202,6 +210,7 @@ export interface FileRouteTypes {
     | '/free/join'
     | '/free/redeem'
     | '/free/shop'
+    | '/admin'
     | '/free'
   id:
     | '__root__'
@@ -221,6 +230,7 @@ export interface FileRouteTypes {
     | '/_authenticated/free/join'
     | '/_authenticated/free/redeem'
     | '/_authenticated/free/shop'
+    | '/_authenticated/admin/'
     | '/_authenticated/free/'
   fileRoutesById: FileRoutesById
 }
@@ -313,6 +323,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPaymentsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/admin/': {
+      id: '/_authenticated/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/free/': {
       id: '/_authenticated/free/'
       path: '/'
@@ -358,6 +375,17 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
+}
+
+const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
+}
+
+const AuthenticatedAdminRouteWithChildren =
+  AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
+
 interface AuthenticatedFreeRouteChildren {
   AuthenticatedFreeAfkRoute: typeof AuthenticatedFreeAfkRoute
   AuthenticatedFreeCreateRoute: typeof AuthenticatedFreeCreateRoute
@@ -380,14 +408,14 @@ const AuthenticatedFreeRouteWithChildren =
   AuthenticatedFreeRoute._addFileChildren(AuthenticatedFreeRouteChildren)
 
 interface AuthenticatedRouteRouteChildren {
-  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
   AuthenticatedCheckoutRoute: typeof AuthenticatedCheckoutRoute
   AuthenticatedFreeRoute: typeof AuthenticatedFreeRouteWithChildren
   AuthenticatedPaymentsRoute: typeof AuthenticatedPaymentsRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
+  AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
   AuthenticatedCheckoutRoute: AuthenticatedCheckoutRoute,
   AuthenticatedFreeRoute: AuthenticatedFreeRouteWithChildren,
   AuthenticatedPaymentsRoute: AuthenticatedPaymentsRoute,
