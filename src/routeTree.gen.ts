@@ -19,6 +19,7 @@ import { Route as VpsRouteImport } from './routes/vps'
 import { Route as AuthenticatedFreeRouteImport } from './routes/_authenticated/free'
 import { Route as AuthenticatedFreeIndexRouteImport } from './routes/_authenticated/free.index'
 import { Route as AuthenticatedFreeAfkRouteImport } from './routes/_authenticated/free.afk'
+import { Route as AuthenticatedFreeCreateRouteImport } from './routes/_authenticated/free.create'
 import { Route as AuthenticatedFreeShopRouteImport } from './routes/_authenticated/free.shop'
 
 const IndexRoute = IndexRouteImport.update({
@@ -70,6 +71,11 @@ const AuthenticatedFreeAfkRoute = AuthenticatedFreeAfkRouteImport.update({
   path: '/afk',
   getParentRoute: () => AuthenticatedFreeRoute,
 } as any)
+const AuthenticatedFreeCreateRoute = AuthenticatedFreeCreateRouteImport.update({
+  id: '/create',
+  path: '/create',
+  getParentRoute: () => AuthenticatedFreeRoute,
+} as any)
 const AuthenticatedFreeShopRoute = AuthenticatedFreeShopRouteImport.update({
   id: '/shop',
   path: '/shop',
@@ -85,6 +91,7 @@ export interface FileRoutesByFullPath {
   '/vps': typeof VpsRoute
   '/free': typeof AuthenticatedFreeRouteWithChildren
   '/free/afk': typeof AuthenticatedFreeAfkRoute
+  '/free/create': typeof AuthenticatedFreeCreateRoute
   '/free/shop': typeof AuthenticatedFreeShopRoute
   '/free/': typeof AuthenticatedFreeIndexRoute
 }
@@ -96,6 +103,7 @@ export interface FileRoutesByTo {
   '/terms': typeof TermsRoute
   '/vps': typeof VpsRoute
   '/free/afk': typeof AuthenticatedFreeAfkRoute
+  '/free/create': typeof AuthenticatedFreeCreateRoute
   '/free/shop': typeof AuthenticatedFreeShopRoute
   '/free': typeof AuthenticatedFreeIndexRoute
 }
@@ -110,6 +118,7 @@ export interface FileRoutesById {
   '/vps': typeof VpsRoute
   '/_authenticated/free': typeof AuthenticatedFreeRouteWithChildren
   '/_authenticated/free/afk': typeof AuthenticatedFreeAfkRoute
+  '/_authenticated/free/create': typeof AuthenticatedFreeCreateRoute
   '/_authenticated/free/shop': typeof AuthenticatedFreeShopRoute
   '/_authenticated/free/': typeof AuthenticatedFreeIndexRoute
 }
@@ -124,6 +133,7 @@ export interface FileRouteTypes {
     | '/vps'
     | '/free'
     | '/free/afk'
+    | '/free/create'
     | '/free/shop'
     | '/free/'
   fileRoutesByTo: FileRoutesByTo
@@ -135,6 +145,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/vps'
     | '/free/afk'
+    | '/free/create'
     | '/free/shop'
     | '/free'
   id:
@@ -148,6 +159,7 @@ export interface FileRouteTypes {
     | '/vps'
     | '/_authenticated/free'
     | '/_authenticated/free/afk'
+    | '/_authenticated/free/create'
     | '/_authenticated/free/shop'
     | '/_authenticated/free/'
   fileRoutesById: FileRoutesById
@@ -234,6 +246,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedFreeAfkRouteImport
       parentRoute: typeof AuthenticatedFreeRoute
     }
+    '/_authenticated/free/create': {
+      id: '/_authenticated/free/create'
+      path: '/create'
+      fullPath: '/free/create'
+      preLoaderRoute: typeof AuthenticatedFreeCreateRouteImport
+      parentRoute: typeof AuthenticatedFreeRoute
+    }
     '/_authenticated/free/shop': {
       id: '/_authenticated/free/shop'
       path: '/shop'
@@ -246,12 +265,14 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedFreeRouteChildren {
   AuthenticatedFreeAfkRoute: typeof AuthenticatedFreeAfkRoute
+  AuthenticatedFreeCreateRoute: typeof AuthenticatedFreeCreateRoute
   AuthenticatedFreeShopRoute: typeof AuthenticatedFreeShopRoute
   AuthenticatedFreeIndexRoute: typeof AuthenticatedFreeIndexRoute
 }
 
 const AuthenticatedFreeRouteChildren: AuthenticatedFreeRouteChildren = {
   AuthenticatedFreeAfkRoute: AuthenticatedFreeAfkRoute,
+  AuthenticatedFreeCreateRoute: AuthenticatedFreeCreateRoute,
   AuthenticatedFreeShopRoute: AuthenticatedFreeShopRoute,
   AuthenticatedFreeIndexRoute: AuthenticatedFreeIndexRoute,
 }
@@ -282,13 +303,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

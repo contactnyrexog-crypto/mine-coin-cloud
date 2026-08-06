@@ -40,12 +40,19 @@ function CreateServerPage() {
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
-    if (!selectedNode) return toast.error("Pick a node.");
+    if (!selectedNode) {
+      toast.error("Pick a node.");
+      return;
+    }
     if (!profile) return;
-    if (ram > profile.ram_mb || disk > profile.disk_gb || cpu > profile.cpu_percent)
-      return toast.error("Not enough resources.");
-    if (coins < selectedNode.coinCost)
-      return toast.error(`Not enough coins — ${selectedNode.name} costs ${selectedNode.coinCost} coins.`);
+    if (ram > profile.ram_mb || disk > profile.disk_gb || cpu > profile.cpu_percent) {
+      toast.error("Not enough resources.");
+      return;
+    }
+    if (coins < selectedNode.coinCost) {
+      toast.error(`Not enough coins — ${selectedNode.name} costs ${selectedNode.coinCost} coins.`);
+      return;
+    }
 
     setBusy(true);
     try {
