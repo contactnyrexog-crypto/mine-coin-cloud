@@ -21,6 +21,7 @@ import { Route as AuthenticatedCheckoutRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedFreeRouteImport } from './routes/_authenticated/free'
 import { Route as AuthenticatedPaymentsRouteImport } from './routes/_authenticated/payments'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
+import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin.users'
 import { Route as AuthenticatedFreeIndexRouteImport } from './routes/_authenticated/free.index'
 import { Route as AuthenticatedFreeAfkRouteImport } from './routes/_authenticated/free.afk'
 import { Route as AuthenticatedFreeCreateRouteImport } from './routes/_authenticated/free.create'
@@ -87,6 +88,11 @@ const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
 const AuthenticatedFreeIndexRoute = AuthenticatedFreeIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -129,6 +135,7 @@ export interface FileRoutesByFullPath {
   '/checkout': typeof AuthenticatedCheckoutRoute
   '/free': typeof AuthenticatedFreeRouteWithChildren
   '/payments': typeof AuthenticatedPaymentsRoute
+  '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/free/afk': typeof AuthenticatedFreeAfkRoute
   '/free/create': typeof AuthenticatedFreeCreateRoute
   '/free/join': typeof AuthenticatedFreeJoinRoute
@@ -146,6 +153,7 @@ export interface FileRoutesByTo {
   '/vps': typeof VpsRoute
   '/checkout': typeof AuthenticatedCheckoutRoute
   '/payments': typeof AuthenticatedPaymentsRoute
+  '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/free/afk': typeof AuthenticatedFreeAfkRoute
   '/free/create': typeof AuthenticatedFreeCreateRoute
   '/free/join': typeof AuthenticatedFreeJoinRoute
@@ -167,6 +175,7 @@ export interface FileRoutesById {
   '/_authenticated/checkout': typeof AuthenticatedCheckoutRoute
   '/_authenticated/free': typeof AuthenticatedFreeRouteWithChildren
   '/_authenticated/payments': typeof AuthenticatedPaymentsRoute
+  '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
   '/_authenticated/free/afk': typeof AuthenticatedFreeAfkRoute
   '/_authenticated/free/create': typeof AuthenticatedFreeCreateRoute
   '/_authenticated/free/join': typeof AuthenticatedFreeJoinRoute
@@ -188,6 +197,7 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/free'
     | '/payments'
+    | '/admin/users'
     | '/free/afk'
     | '/free/create'
     | '/free/join'
@@ -205,6 +215,7 @@ export interface FileRouteTypes {
     | '/vps'
     | '/checkout'
     | '/payments'
+    | '/admin/users'
     | '/free/afk'
     | '/free/create'
     | '/free/join'
@@ -225,6 +236,7 @@ export interface FileRouteTypes {
     | '/_authenticated/checkout'
     | '/_authenticated/free'
     | '/_authenticated/payments'
+    | '/_authenticated/admin/users'
     | '/_authenticated/free/afk'
     | '/_authenticated/free/create'
     | '/_authenticated/free/join'
@@ -330,6 +342,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/users': {
+      id: '/_authenticated/admin/users'
+      path: '/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AuthenticatedAdminUsersRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/free/': {
       id: '/_authenticated/free/'
       path: '/'
@@ -376,10 +395,12 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
 }
 
