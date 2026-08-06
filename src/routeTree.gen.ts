@@ -18,6 +18,7 @@ import { Route as TermsRouteImport } from './routes/terms'
 import { Route as VpsRouteImport } from './routes/vps'
 import { Route as AuthenticatedCheckoutRouteImport } from './routes/_authenticated/checkout'
 import { Route as AuthenticatedFreeRouteImport } from './routes/_authenticated/free'
+import { Route as AuthenticatedPaymentsRouteImport } from './routes/_authenticated/payments'
 import { Route as AuthenticatedFreeIndexRouteImport } from './routes/_authenticated/free.index'
 import { Route as AuthenticatedFreeAfkRouteImport } from './routes/_authenticated/free.afk'
 import { Route as AuthenticatedFreeCreateRouteImport } from './routes/_authenticated/free.create'
@@ -69,6 +70,11 @@ const AuthenticatedFreeRoute = AuthenticatedFreeRouteImport.update({
   path: '/free',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedPaymentsRoute = AuthenticatedPaymentsRouteImport.update({
+  id: '/payments',
+  path: '/payments',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedFreeIndexRoute = AuthenticatedFreeIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -109,6 +115,7 @@ export interface FileRoutesByFullPath {
   '/vps': typeof VpsRoute
   '/checkout': typeof AuthenticatedCheckoutRoute
   '/free': typeof AuthenticatedFreeRouteWithChildren
+  '/payments': typeof AuthenticatedPaymentsRoute
   '/free/afk': typeof AuthenticatedFreeAfkRoute
   '/free/create': typeof AuthenticatedFreeCreateRoute
   '/free/join': typeof AuthenticatedFreeJoinRoute
@@ -124,6 +131,7 @@ export interface FileRoutesByTo {
   '/terms': typeof TermsRoute
   '/vps': typeof VpsRoute
   '/checkout': typeof AuthenticatedCheckoutRoute
+  '/payments': typeof AuthenticatedPaymentsRoute
   '/free/afk': typeof AuthenticatedFreeAfkRoute
   '/free/create': typeof AuthenticatedFreeCreateRoute
   '/free/join': typeof AuthenticatedFreeJoinRoute
@@ -142,6 +150,7 @@ export interface FileRoutesById {
   '/vps': typeof VpsRoute
   '/_authenticated/checkout': typeof AuthenticatedCheckoutRoute
   '/_authenticated/free': typeof AuthenticatedFreeRouteWithChildren
+  '/_authenticated/payments': typeof AuthenticatedPaymentsRoute
   '/_authenticated/free/afk': typeof AuthenticatedFreeAfkRoute
   '/_authenticated/free/create': typeof AuthenticatedFreeCreateRoute
   '/_authenticated/free/join': typeof AuthenticatedFreeJoinRoute
@@ -160,6 +169,7 @@ export interface FileRouteTypes {
     | '/vps'
     | '/checkout'
     | '/free'
+    | '/payments'
     | '/free/afk'
     | '/free/create'
     | '/free/join'
@@ -175,6 +185,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/vps'
     | '/checkout'
+    | '/payments'
     | '/free/afk'
     | '/free/create'
     | '/free/join'
@@ -192,6 +203,7 @@ export interface FileRouteTypes {
     | '/vps'
     | '/_authenticated/checkout'
     | '/_authenticated/free'
+    | '/_authenticated/payments'
     | '/_authenticated/free/afk'
     | '/_authenticated/free/create'
     | '/_authenticated/free/join'
@@ -275,6 +287,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedFreeRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/payments': {
+      id: '/_authenticated/payments'
+      path: '/payments'
+      fullPath: '/payments'
+      preLoaderRoute: typeof AuthenticatedPaymentsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/free/': {
       id: '/_authenticated/free/'
       path: '/'
@@ -344,11 +363,13 @@ const AuthenticatedFreeRouteWithChildren =
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedCheckoutRoute: typeof AuthenticatedCheckoutRoute
   AuthenticatedFreeRoute: typeof AuthenticatedFreeRouteWithChildren
+  AuthenticatedPaymentsRoute: typeof AuthenticatedPaymentsRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCheckoutRoute: AuthenticatedCheckoutRoute,
   AuthenticatedFreeRoute: AuthenticatedFreeRouteWithChildren,
+  AuthenticatedPaymentsRoute: AuthenticatedPaymentsRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
