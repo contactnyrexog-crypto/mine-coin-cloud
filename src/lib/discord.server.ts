@@ -17,7 +17,7 @@ export async function sendPaymentWebhook(payload: {
     embeds: [
       {
         title: "🧾 New Payment Submitted",
-        color: 0x3ddc84,
+        color: 0x9b5cff,
         fields: [
           { name: "Payment Type", value: payload.paymentType, inline: true },
           { name: "Product", value: payload.productType.toUpperCase(), inline: true },
