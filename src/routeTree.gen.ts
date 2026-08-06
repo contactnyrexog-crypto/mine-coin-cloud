@@ -21,6 +21,7 @@ import { Route as AuthenticatedCheckoutRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedFreeRouteImport } from './routes/_authenticated/free'
 import { Route as AuthenticatedPaymentsRouteImport } from './routes/_authenticated/payments'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
+import { Route as AuthenticatedAdminRedeemcodesRouteImport } from './routes/_authenticated/admin.redeemcodes'
 import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin.users'
 import { Route as AuthenticatedFreeIndexRouteImport } from './routes/_authenticated/free.index'
 import { Route as AuthenticatedFreeAfkRouteImport } from './routes/_authenticated/free.afk'
@@ -88,6 +89,12 @@ const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedAdminRedeemcodesRoute =
+  AuthenticatedAdminRedeemcodesRouteImport.update({
+    id: '/redeemcodes',
+    path: '/redeemcodes',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
   id: '/users',
   path: '/users',
@@ -135,6 +142,7 @@ export interface FileRoutesByFullPath {
   '/checkout': typeof AuthenticatedCheckoutRoute
   '/free': typeof AuthenticatedFreeRouteWithChildren
   '/payments': typeof AuthenticatedPaymentsRoute
+  '/admin/redeemcodes': typeof AuthenticatedAdminRedeemcodesRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/free/afk': typeof AuthenticatedFreeAfkRoute
   '/free/create': typeof AuthenticatedFreeCreateRoute
@@ -153,6 +161,7 @@ export interface FileRoutesByTo {
   '/vps': typeof VpsRoute
   '/checkout': typeof AuthenticatedCheckoutRoute
   '/payments': typeof AuthenticatedPaymentsRoute
+  '/admin/redeemcodes': typeof AuthenticatedAdminRedeemcodesRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/free/afk': typeof AuthenticatedFreeAfkRoute
   '/free/create': typeof AuthenticatedFreeCreateRoute
@@ -175,6 +184,7 @@ export interface FileRoutesById {
   '/_authenticated/checkout': typeof AuthenticatedCheckoutRoute
   '/_authenticated/free': typeof AuthenticatedFreeRouteWithChildren
   '/_authenticated/payments': typeof AuthenticatedPaymentsRoute
+  '/_authenticated/admin/redeemcodes': typeof AuthenticatedAdminRedeemcodesRoute
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
   '/_authenticated/free/afk': typeof AuthenticatedFreeAfkRoute
   '/_authenticated/free/create': typeof AuthenticatedFreeCreateRoute
@@ -197,6 +207,7 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/free'
     | '/payments'
+    | '/admin/redeemcodes'
     | '/admin/users'
     | '/free/afk'
     | '/free/create'
@@ -215,6 +226,7 @@ export interface FileRouteTypes {
     | '/vps'
     | '/checkout'
     | '/payments'
+    | '/admin/redeemcodes'
     | '/admin/users'
     | '/free/afk'
     | '/free/create'
@@ -236,6 +248,7 @@ export interface FileRouteTypes {
     | '/_authenticated/checkout'
     | '/_authenticated/free'
     | '/_authenticated/payments'
+    | '/_authenticated/admin/redeemcodes'
     | '/_authenticated/admin/users'
     | '/_authenticated/free/afk'
     | '/_authenticated/free/create'
@@ -342,6 +355,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/redeemcodes': {
+      id: '/_authenticated/admin/redeemcodes'
+      path: '/redeemcodes'
+      fullPath: '/admin/redeemcodes'
+      preLoaderRoute: typeof AuthenticatedAdminRedeemcodesRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/users': {
       id: '/_authenticated/admin/users'
       path: '/users'
@@ -395,11 +415,13 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminRedeemcodesRoute: typeof AuthenticatedAdminRedeemcodesRoute
   AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminRedeemcodesRoute: AuthenticatedAdminRedeemcodesRoute,
   AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
 }
