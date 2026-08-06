@@ -20,6 +20,7 @@ import { Route as AuthenticatedFreeRouteImport } from './routes/_authenticated/f
 import { Route as AuthenticatedFreeIndexRouteImport } from './routes/_authenticated/free.index'
 import { Route as AuthenticatedFreeAfkRouteImport } from './routes/_authenticated/free.afk'
 import { Route as AuthenticatedFreeCreateRouteImport } from './routes/_authenticated/free.create'
+import { Route as AuthenticatedFreeRedeemRouteImport } from './routes/_authenticated/free.redeem'
 import { Route as AuthenticatedFreeShopRouteImport } from './routes/_authenticated/free.shop'
 
 const IndexRoute = IndexRouteImport.update({
@@ -76,6 +77,11 @@ const AuthenticatedFreeCreateRoute = AuthenticatedFreeCreateRouteImport.update({
   path: '/create',
   getParentRoute: () => AuthenticatedFreeRoute,
 } as any)
+const AuthenticatedFreeRedeemRoute = AuthenticatedFreeRedeemRouteImport.update({
+  id: '/redeem',
+  path: '/redeem',
+  getParentRoute: () => AuthenticatedFreeRoute,
+} as any)
 const AuthenticatedFreeShopRoute = AuthenticatedFreeShopRouteImport.update({
   id: '/shop',
   path: '/shop',
@@ -92,6 +98,7 @@ export interface FileRoutesByFullPath {
   '/free': typeof AuthenticatedFreeRouteWithChildren
   '/free/afk': typeof AuthenticatedFreeAfkRoute
   '/free/create': typeof AuthenticatedFreeCreateRoute
+  '/free/redeem': typeof AuthenticatedFreeRedeemRoute
   '/free/shop': typeof AuthenticatedFreeShopRoute
   '/free/': typeof AuthenticatedFreeIndexRoute
 }
@@ -104,6 +111,7 @@ export interface FileRoutesByTo {
   '/vps': typeof VpsRoute
   '/free/afk': typeof AuthenticatedFreeAfkRoute
   '/free/create': typeof AuthenticatedFreeCreateRoute
+  '/free/redeem': typeof AuthenticatedFreeRedeemRoute
   '/free/shop': typeof AuthenticatedFreeShopRoute
   '/free': typeof AuthenticatedFreeIndexRoute
 }
@@ -119,6 +127,7 @@ export interface FileRoutesById {
   '/_authenticated/free': typeof AuthenticatedFreeRouteWithChildren
   '/_authenticated/free/afk': typeof AuthenticatedFreeAfkRoute
   '/_authenticated/free/create': typeof AuthenticatedFreeCreateRoute
+  '/_authenticated/free/redeem': typeof AuthenticatedFreeRedeemRoute
   '/_authenticated/free/shop': typeof AuthenticatedFreeShopRoute
   '/_authenticated/free/': typeof AuthenticatedFreeIndexRoute
 }
@@ -134,6 +143,7 @@ export interface FileRouteTypes {
     | '/free'
     | '/free/afk'
     | '/free/create'
+    | '/free/redeem'
     | '/free/shop'
     | '/free/'
   fileRoutesByTo: FileRoutesByTo
@@ -146,6 +156,7 @@ export interface FileRouteTypes {
     | '/vps'
     | '/free/afk'
     | '/free/create'
+    | '/free/redeem'
     | '/free/shop'
     | '/free'
   id:
@@ -160,6 +171,7 @@ export interface FileRouteTypes {
     | '/_authenticated/free'
     | '/_authenticated/free/afk'
     | '/_authenticated/free/create'
+    | '/_authenticated/free/redeem'
     | '/_authenticated/free/shop'
     | '/_authenticated/free/'
   fileRoutesById: FileRoutesById
@@ -253,6 +265,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedFreeCreateRouteImport
       parentRoute: typeof AuthenticatedFreeRoute
     }
+    '/_authenticated/free/redeem': {
+      id: '/_authenticated/free/redeem'
+      path: '/redeem'
+      fullPath: '/free/redeem'
+      preLoaderRoute: typeof AuthenticatedFreeRedeemRouteImport
+      parentRoute: typeof AuthenticatedFreeRoute
+    }
     '/_authenticated/free/shop': {
       id: '/_authenticated/free/shop'
       path: '/shop'
@@ -266,6 +285,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedFreeRouteChildren {
   AuthenticatedFreeAfkRoute: typeof AuthenticatedFreeAfkRoute
   AuthenticatedFreeCreateRoute: typeof AuthenticatedFreeCreateRoute
+  AuthenticatedFreeRedeemRoute: typeof AuthenticatedFreeRedeemRoute
   AuthenticatedFreeShopRoute: typeof AuthenticatedFreeShopRoute
   AuthenticatedFreeIndexRoute: typeof AuthenticatedFreeIndexRoute
 }
@@ -273,6 +293,7 @@ interface AuthenticatedFreeRouteChildren {
 const AuthenticatedFreeRouteChildren: AuthenticatedFreeRouteChildren = {
   AuthenticatedFreeAfkRoute: AuthenticatedFreeAfkRoute,
   AuthenticatedFreeCreateRoute: AuthenticatedFreeCreateRoute,
+  AuthenticatedFreeRedeemRoute: AuthenticatedFreeRedeemRoute,
   AuthenticatedFreeShopRoute: AuthenticatedFreeShopRoute,
   AuthenticatedFreeIndexRoute: AuthenticatedFreeIndexRoute,
 }
