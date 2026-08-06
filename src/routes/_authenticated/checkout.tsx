@@ -72,9 +72,9 @@ function CheckoutPage() {
       const order = await create({
         data: {
           productType: type,
+          ...(coupon.trim() ? { couponCode: coupon.trim() } : {}),
           planKey,
           currency,
-          couponCode: coupon.trim() || undefined,
           billingEmail: email,
           billingAddress: address,
           paymentMethod: method,
