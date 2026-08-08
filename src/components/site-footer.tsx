@@ -7,10 +7,10 @@ export function SiteFooter() {
       <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 md:grid-cols-3">
         <div>
           <p className="font-display text-lg font-bold">
-            <span className="text-primary">NETHOST</span> x <span className="text-accent">MENTION HOST</span>
+            <span className="text-primary">NETHOST</span>
           </p>
           <p className="mt-2 max-w-xs text-sm text-muted-foreground">
-            Mention Host is an official partner of NetHost. Free game panels, budget & premium Minecraft hosting and
+            NETHOST — in partnership with Mention Host. Free game panels, budget & premium Minecraft hosting and
             high-memory VPS.
           </p>
         </div>
@@ -39,7 +39,7 @@ export function SiteFooter() {
         </div>
       </div>
       <div className="border-t border-border/60 py-4 text-center text-xs text-muted-foreground">
-        © {new Date().getFullYear()} NetHost x Mention Host. All rights reserved.
+        © {new Date().getFullYear()} NETHOST. All rights reserved.
       </div>
     </footer>
   );

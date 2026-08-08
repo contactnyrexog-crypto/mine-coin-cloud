@@ -8,6 +8,7 @@ import { CURRENCIES, type CurrencyCode, BRAND } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
+import logo from "@/assets/nethost-logo.png";
 
 const NAV = [
   { to: "/", label: "Home" },
@@ -47,10 +48,9 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-xl">
       <div className="mx-auto flex max-w-7xl items-center gap-4 px-4 py-3">
-        <Link to="/" className="font-display text-lg font-bold tracking-tight">
+        <Link to="/" className="flex items-center gap-2 font-display text-lg font-bold tracking-tight">
+          <img src={logo.url} alt="NETHOST logo" width={32} height={32} className="size-8" />
           <span className="text-primary">NETHOST</span>
-          <span className="text-muted-foreground"> x </span>
-          <span className="text-accent">MENTION HOST</span>
         </Link>
 
         <nav className="ml-6 hidden items-center gap-1 md:flex">
