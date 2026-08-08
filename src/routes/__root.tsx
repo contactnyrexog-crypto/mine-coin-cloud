@@ -82,11 +82,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "NETHOST x MENTION HOST — Minecraft & VPS Hosting" },
+      { title: "NETHOST — Minecraft, Bot & VPS Hosting" },
       {
         name: "description",
         content:
-          "Free Minecraft panels, budget and premium Minecraft servers on AMD EPYC and Ryzen 9, plus high-memory VPS hosting.",
+          "NETHOST, in partnership with Mention Host: free Minecraft panels, budget and premium Minecraft servers on AMD EPYC and Ryzen 9, plus high-memory VPS hosting.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -99,7 +99,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Inter+Tight:wght@400;500;600&display=swap",
       },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "icon", href: "/favicon.png", type: "image/png" },
     ],
   }),
   shellComponent: RootShell,

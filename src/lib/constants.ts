@@ -1,4 +1,4 @@
-export const BRAND = "NETHOST x MENTION HOST";
+export const BRAND = "NETHOST";
 export const NETHOST_DISCORD = "https://discord.gg/6rrVav8HhH";
 export const MENTIONHOST_DISCORD = "https://discord.gg/wFZa6HKNQH";
 
@@ -35,7 +35,7 @@ export const JOIN_REWARDS = [
   { key: "mentionhost", label: "Join Mention Host", coins: 50, url: MENTIONHOST_DISCORD },
 ] as const;
 
-export const DEFAULT_RESOURCES = { ram_mb: 2048, disk_gb: 1, cpu_percent: 75 };
+export const DEFAULT_RESOURCES = { ram_mb: 2048, disk_gb: 5, cpu_percent: 75 };
 
 /* ---------------- Nodes ---------------- */
 
