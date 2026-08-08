@@ -49,7 +49,7 @@ export function SiteHeader() {
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-xl">
       <div className="mx-auto flex max-w-7xl items-center gap-4 px-4 py-3">
         <Link to="/" className="flex items-center gap-2 font-display text-lg font-bold tracking-tight">
-          <img src={logo.url} alt="NETHOST logo" width={32} height={32} className="size-8" />
+          <img src={logo} alt="NETHOST logo" width={32} height={32} className="size-8" />
           <span className="text-primary">NETHOST</span>
         </Link>
 
