@@ -1,18 +1,19 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Coins, Gamepad2, Server, ShieldCheck, Zap, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { HeroCarousel } from "@/components/hero-carousel";
 import { MENTIONHOST_DISCORD, NETHOST_DISCORD } from "@/lib/constants";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "NETHOST x MENTION HOST — Free, Minecraft & VPS Hosting" },
+      { title: "NETHOST — Free, Minecraft & VPS Hosting" },
       {
         name: "description",
         content:
-          "Pick your lane: earn a free Minecraft panel with coins, grab a budget or premium Minecraft server, or deploy a high-memory VPS.",
+          "NETHOST, in partnership with Mention Host: earn a free Minecraft panel with coins, grab a budget or premium Minecraft server, or deploy a high-memory VPS.",
       },
-      { property: "og:title", content: "NETHOST x MENTION HOST — Game & VPS Hosting" },
+      { property: "og:title", content: "NETHOST — Game & VPS Hosting" },
       {
         property: "og:description",
         content: "Free panels, budget and premium Minecraft hosting on EPYC and Ryzen 9, plus 8–64GB VPS plans.",
