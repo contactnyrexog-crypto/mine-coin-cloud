@@ -4,9 +4,9 @@ import { BRAND } from "@/lib/constants";
 export const Route = createFileRoute("/privacy")({
   head: () => ({
     meta: [
-      { title: "Privacy Policy — NETHOST x MENTION HOST" },
-      { name: "description", content: "How NetHost x Mention Host collects, stores and uses your data." },
-      { property: "og:title", content: "Privacy Policy — NETHOST x MENTION HOST" },
+      { title: "Privacy Policy — NETHOST" },
+      { name: "description", content: "How NETHOST collects, stores and uses your data." },
+      { property: "og:title", content: "Privacy Policy — NETHOST" },
       { property: "og:description", content: "Data we store, why we store it, and how to have it removed." },
     ],
   }),

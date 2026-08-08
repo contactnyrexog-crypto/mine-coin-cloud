@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 export const Route = createFileRoute("/minecraft")({
   head: () => ({
     meta: [
-      { title: "Minecraft Hosting Plans — NETHOST x MENTION HOST" },
+      { title: "Minecraft Hosting Plans — NETHOST" },
       {
         name: "description",
         content:

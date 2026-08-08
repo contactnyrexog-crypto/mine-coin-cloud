@@ -1,18 +1,19 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Coins, Gamepad2, Server, ShieldCheck, Zap, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { HeroCarousel } from "@/components/hero-carousel";
 import { MENTIONHOST_DISCORD, NETHOST_DISCORD } from "@/lib/constants";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "NETHOST x MENTION HOST — Free, Minecraft & VPS Hosting" },
+      { title: "NETHOST — Free, Minecraft & VPS Hosting" },
       {
         name: "description",
         content:
-          "Pick your lane: earn a free Minecraft panel with coins, grab a budget or premium Minecraft server, or deploy a high-memory VPS.",
+          "NETHOST, in partnership with Mention Host: earn a free Minecraft panel with coins, grab a budget or premium Minecraft server, or deploy a high-memory VPS.",
       },
-      { property: "og:title", content: "NETHOST x MENTION HOST — Game & VPS Hosting" },
+      { property: "og:title", content: "NETHOST — Game & VPS Hosting" },
       {
         property: "og:description",
         content: "Free panels, budget and premium Minecraft hosting on EPYC and Ryzen 9, plus 8–64GB VPS plans.",
@@ -49,17 +50,21 @@ const CATEGORIES = [
 function Home() {
   return (
     <div>
-      <section className="mx-auto max-w-7xl px-4 pb-16 pt-20 text-center">
+      <div className="mx-auto max-w-7xl px-4 pt-6">
+        <HeroCarousel />
+      </div>
+
+      <section className="mx-auto max-w-7xl px-4 pb-16 pt-16 text-center">
         <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-xs font-medium text-primary">
-          <ShieldCheck className="size-3.5" /> Mention Host is an official partner of NetHost
+          <ShieldCheck className="size-3.5" /> In partnership with Mention Host
         </p>
-        <h1 className="mx-auto max-w-4xl font-display text-5xl font-bold leading-tight md:text-7xl">
+        <h2 className="mx-auto max-w-4xl font-display text-4xl font-bold leading-tight md:text-6xl">
           Hosting that starts <span className="text-primary">free</span> and scales to{" "}
           <span className="text-accent">64GB</span>
-        </h1>
+        </h2>
         <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">
-          NetHost x Mention Host runs Minecraft servers, bot panels and VPS across Tokyo, Singapore, India and
-          Amsterdam. Choose a category to get started.
+          NETHOST runs Minecraft servers, bot panels and VPS across Tokyo, Singapore, India and Amsterdam. Choose a
+          category to get started.
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <Button size="lg" asChild>
@@ -70,6 +75,7 @@ function Home() {
           </Button>
         </div>
       </section>
+
 
       <section className="mx-auto grid max-w-7xl gap-6 px-4 md:grid-cols-3">
         {CATEGORIES.map((c) => (
