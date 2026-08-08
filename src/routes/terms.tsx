@@ -4,9 +4,9 @@ import { BRAND } from "@/lib/constants";
 export const Route = createFileRoute("/terms")({
   head: () => ({
     meta: [
-      { title: "Terms of Service — NETHOST x MENTION HOST" },
-      { name: "description", content: "Terms of service for NetHost x Mention Host hosting, free panels and VPS." },
-      { property: "og:title", content: "Terms of Service — NETHOST x MENTION HOST" },
+      { title: "Terms of Service — NETHOST" },
+      { name: "description", content: "Terms of service for NETHOST hosting, free panels and VPS." },
+      { property: "og:title", content: "Terms of Service — NETHOST" },
       { property: "og:description", content: "Rules covering usage, payments, refunds and suspension." },
     ],
   }),

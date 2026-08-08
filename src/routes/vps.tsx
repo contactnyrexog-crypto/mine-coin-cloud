@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 export const Route = createFileRoute("/vps")({
   head: () => ({
     meta: [
-      { title: "VPS Hosting Plans — NETHOST x MENTION HOST" },
+      { title: "VPS Hosting Plans — NETHOST" },
       {
         name: "description",
         content: "High-memory VPS from 8GB to 64GB RAM starting at ₹100/mo, with key-file access and fast delivery.",

@@ -9,9 +9,9 @@ import { Label } from "@/components/ui/label";
 export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
-      { title: "Sign in — NETHOST x MENTION HOST" },
-      { name: "description", content: "Sign in or create your NetHost x Mention Host account to manage hosting." },
-      { property: "og:title", content: "Sign in — NETHOST x MENTION HOST" },
+      { title: "Sign in — NETHOST" },
+      { name: "description", content: "Sign in or create your NETHOST account to manage hosting." },
+      { property: "og:title", content: "Sign in — NETHOST" },
       { property: "og:description", content: "Access your free panel, orders and servers." },
     ],
   }),
