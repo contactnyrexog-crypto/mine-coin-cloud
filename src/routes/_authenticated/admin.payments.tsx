@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
 export const Route = createFileRoute("/_authenticated/admin/payments")({
-  validateSearch: (s: Record<string, unknown>) => ({
+  validateSearch: (s: Record<string, unknown>): { order?: string | undefined; action?: string | undefined } => ({
     order: s["order"] ? String(s["order"]) : undefined,
     action: s["action"] === "accept" || s["action"] === "reject" ? (s["action"] as string) : undefined,
   }),
