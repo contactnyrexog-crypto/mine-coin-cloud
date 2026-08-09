@@ -15,7 +15,7 @@ export const Route = createFileRoute("/auth")({
       { property: "og:description", content: "Access your free panel, orders and servers." },
     ],
   }),
-  validateSearch: (s: Record<string, unknown>) => ({ redirect: typeof s["redirect"] === "string" ? s["redirect"] : "" }),
+  validateSearch: (s: Record<string, unknown>): { redirect?: string } => ({ redirect: typeof s["redirect"] === "string" ? s["redirect"] : "" }),
   component: AuthPage,
 });
 
