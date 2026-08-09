@@ -2,15 +2,27 @@ import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { z } from "zod";
 
+async function ensureProfile(supabase: any, userId: string, email?: string) {
+  const { data } = await supabase.from("profiles").select("*").eq("id", userId).maybeSingle();
+  if (data) return data;
+  const { data: created, error } = await supabase
+    .from("profiles")
+    .insert({ id: userId, email: email ?? null })
+    .select("*")
+    .maybeSingle();
+  if (error) throw new Error(error.message);
+  return created;
+}
+
 export const getMyProfile = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { supabase, userId } = context;
-    const { data, error } = await supabase.from("profiles").select("*").eq("id", userId).maybeSingle();
-    if (error) throw new Error(error.message);
+    const { supabase, userId, claims } = context;
+    const data = await ensureProfile(supabase, userId, (claims as { email?: string }).email);
     const { data: roles } = await supabase.from("user_roles").select("role").eq("user_id", userId);
     return { profile: data, isAdmin: (roles ?? []).some((r) => r.role === "admin") };
   });
+
 
 export const setCurrencyPref = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
