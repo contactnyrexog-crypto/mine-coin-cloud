@@ -53,12 +53,28 @@ export async function findEgg(eggKey: string) {
     for (const egg of nest.attributes.relationships?.eggs?.data ?? []) {
       const name = String(egg.attributes.name).toLowerCase();
       if (name.includes(needle) || (needle === "nodejs" && name.includes("node"))) {
-        return { eggId: egg.attributes.id as number, nestId: nest.attributes.id as number, egg: egg.attributes };
+        const nestId = nest.attributes.id as number;
+        const eggId = egg.attributes.id as number;
+        // the nests listing does not include variables; fetch the full egg
+        const full = await api(`/nests/${nestId}/eggs/${eggId}?include=variables`);
+        return { eggId, nestId, egg: full?.attributes ?? egg.attributes };
       }
     }
   }
   throw new Error(`Egg "${eggKey}" not found on the panel.`);
 }
+
+const ENV_FALLBACKS: Record<string, string> = {
+  SERVER_JARFILE: "server.jar",
+  BUILD_NUMBER: "latest",
+  MINECRAFT_VERSION: "latest",
+  VANILLA_VERSION: "latest",
+  BUNGEE_VERSION: "latest",
+  MC_VERSION: "latest",
+  VERSION: "latest",
+  PROJECT: "paper",
+  DL_PATH: "",
+};
 
 export async function createPanelServer(opts: {
   email: string;
@@ -76,8 +92,16 @@ export async function createPanelServer(opts: {
 
   const environment: Record<string, string> = {};
   for (const v of egg.relationships?.variables?.data ?? []) {
-    environment[v.attributes.env_variable] = String(v.attributes.default_value ?? "");
+    const a = v.attributes;
+    let value = a.default_value;
+    if (value === null || value === undefined || value === "") {
+      value = ENV_FALLBACKS[a.env_variable] ?? "";
+    }
+    const required = String(a.rules ?? "").includes("required");
+    if (required && value === "") value = ENV_FALLBACKS[a.env_variable] ?? "latest";
+    environment[a.env_variable] = String(value);
   }
+
 
   const server = await api(`/servers`, {
     method: "POST",
