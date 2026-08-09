@@ -1,11 +1,14 @@
 import { Link } from "@tanstack/react-router";
-import { Cpu, HardDrive, MemoryStick } from "lucide-react";
+import { Cpu, HardDrive, MemoryStick, ShoppingCart } from "lucide-react";
+import { toast } from "sonner";
 import type { McPlan } from "@/lib/constants";
 import { useCurrency } from "@/lib/currency";
+import { useCart } from "@/lib/cart";
 import { Button } from "@/components/ui/button";
 
 export function PlanCard({ plan, tier }: { plan: McPlan; tier: "budget" | "premium" }) {
   const { price } = useCurrency();
+  const cart = useCart();
   return (
     <div className="panel flex flex-col gap-4 p-6 transition-transform hover:-translate-y-1">
       <div className="flex items-center gap-3">
@@ -26,11 +29,30 @@ export function PlanCard({ plan, tier }: { plan: McPlan; tier: "budget" | "premi
       <div className="mt-auto">
         <p className="font-display text-3xl font-bold text-primary">{price(plan.price)}</p>
         <p className="text-xs text-muted-foreground">per month · {tier === "premium" ? "Ryzen 9 9950X" : "EPYC 7"}</p>
-        <Button className="mt-4 w-full" asChild>
-          <Link to="/checkout" search={{ plan: plan.key, type: "minecraft" }}>
-            Buy {plan.name}
-          </Link>
-        </Button>
+        <div className="mt-4 flex gap-2">
+          <Button className="flex-1" asChild>
+            <Link to="/checkout" search={{ plan: plan.key, type: "minecraft" }}>
+              Buy now
+            </Link>
+          </Button>
+          <Button
+            variant="secondary"
+            size="icon"
+            aria-label={`Add ${plan.name} to cart`}
+            onClick={() => {
+              cart.add({
+                key: plan.key,
+                name: `${tier === "premium" ? "Premium" : "Budget"} ${plan.name}`,
+                type: "minecraft",
+                price: plan.price,
+                meta: `${plan.ram}GB RAM · ${plan.cores} · ${plan.disk}GB NVMe`,
+              });
+              toast.success(`${plan.name} added to cart`);
+            }}
+          >
+            <ShoppingCart className="size-4" />
+          </Button>
+        </div>
       </div>
     </div>
   );

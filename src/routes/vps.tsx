@@ -1,5 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Server } from "lucide-react";
+import { Server, ShoppingCart } from "lucide-react";
+import { toast } from "sonner";
+import { useCart } from "@/lib/cart";
 import { VPS_PLANS } from "@/lib/constants";
 import { useCurrency } from "@/lib/currency";
 import { Button } from "@/components/ui/button";
@@ -21,6 +23,7 @@ export const Route = createFileRoute("/vps")({
 
 function VpsPage() {
   const { price } = useCurrency();
+  const cart = useCart();
   return (
     <div className="mx-auto max-w-7xl px-4 py-16">
       <h1 className="font-display text-4xl font-bold md:text-5xl">VPS Hosting</h1>
@@ -37,11 +40,30 @@ function VpsPage() {
             <div className="mt-auto">
               <p className="font-display text-3xl font-bold text-primary">{price(p.price)}</p>
               <p className="text-xs text-muted-foreground">per month</p>
-              <Button className="mt-4 w-full" asChild>
-                <Link to="/checkout" search={{ plan: p.key, type: "vps" }}>
-                  Buy {p.name}
-                </Link>
-              </Button>
+              <div className="mt-4 flex gap-2">
+                <Button className="flex-1" asChild>
+                  <Link to="/checkout" search={{ plan: p.key, type: "vps" }}>
+                    Buy now
+                  </Link>
+                </Button>
+                <Button
+                  variant="secondary"
+                  size="icon"
+                  aria-label={`Add ${p.name} to cart`}
+                  onClick={() => {
+                    cart.add({
+                      key: p.key,
+                      name: p.name,
+                      type: "vps",
+                      price: p.price,
+                      meta: `${p.ram}GB RAM · NVMe · Root access`,
+                    });
+                    toast.success(`${p.name} added to cart`);
+                  }}
+                >
+                  <ShoppingCart className="size-4" />
+                </Button>
+              </div>
             </div>
           </div>
         ))}

@@ -13,6 +13,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { supabase } from "@/integrations/supabase/client";
 import { CurrencyProvider } from "@/lib/currency";
+import { CartProvider } from "@/lib/cart";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { Toaster } from "@/components/ui/sonner";
@@ -138,6 +139,7 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <CurrencyProvider>
+        <CartProvider>
         <div className="flex min-h-screen flex-col">
           <SiteHeader />
           <main className="flex-1">
@@ -146,6 +148,7 @@ function RootComponent() {
           </main>
           <SiteFooter />
         </div>
+        </CartProvider>
         <Toaster position="top-center" richColors />
       </CurrencyProvider>
     </QueryClientProvider>
