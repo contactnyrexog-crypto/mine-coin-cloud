@@ -40,9 +40,57 @@ function AdminUsers() {
     }
   }
 
+  function downloadBackup() {
+    const blob = new Blob([exportBackup()], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `nethost-backup-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success("Backup downloaded");
+  }
+
+  async function restoreBackup(file: File) {
+    try {
+      importBackup(await file.text());
+      toast.success("Backup restored — reloading");
+      setTimeout(() => window.location.reload(), 700);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "That backup could not be read");
+    }
+  }
+
   return (
     <div className="space-y-4">
+      <div className="panel space-y-3 p-5">
+        <p className="font-display font-bold">Backup &amp; restore</p>
+        <p className="text-xs text-muted-foreground">
+          All accounts, coins, orders and payment screenshots live in this browser only. Clearing
+          site data erases them permanently — download a backup regularly.
+        </p>
+        <div className="flex flex-wrap items-center gap-2">
+          <Button onClick={downloadBackup}>Download backup</Button>
+          <Button variant="secondary" asChild>
+            <label className="cursor-pointer">
+              Restore from file
+              <input
+                type="file"
+                accept="application/json"
+                className="hidden"
+                onChange={(e) => {
+                  const f = e.target.files?.[0];
+                  if (f) void restoreBackup(f);
+                  e.target.value = "";
+                }}
+              />
+            </label>
+          </Button>
+        </div>
+      </div>
+
       <Input placeholder="Search by email…" value={q} onChange={(e) => setQ(e.target.value)} className="max-w-sm" />
+
       {shown.map((u: any) => (
         <div key={u.id} className="panel space-y-3 p-5">
           <div className="flex flex-wrap items-center justify-between gap-2">
