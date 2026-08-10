@@ -1,1 +1,0 @@
-ALTER TABLE public.profiles ALTER COLUMN disk_gb SET DEFAULT 5;
