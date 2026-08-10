@@ -67,7 +67,10 @@ function AdminOrderCard({ order, focus }: { order: any; focus?: string | undefin
     }
   }
 
+  const proof = getProofImage(order.id);
+
   return (
+
     <div className="panel space-y-4 p-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
