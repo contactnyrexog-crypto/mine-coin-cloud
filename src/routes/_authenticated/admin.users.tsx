@@ -4,6 +4,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@/lib/local-fn";
 import { toast } from "sonner";
 import { adminListUsers, adminGrant } from "@/lib/admin.functions";
+import { exportBackup, importBackup } from "@/lib/local-db";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
