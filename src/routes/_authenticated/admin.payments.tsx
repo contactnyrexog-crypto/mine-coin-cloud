@@ -4,6 +4,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@/lib/local-fn";
 import { toast } from "sonner";
 import { adminListOrders, adminDecideOrder } from "@/lib/admin.functions";
+import { getProofImage } from "@/lib/orders.functions";
 import { CURRENCIES } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
