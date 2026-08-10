@@ -94,12 +94,9 @@ function CheckoutPage() {
     if (!file || !orderId) return;
     setBusy(true);
     try {
-      const { data: auth } = await supabase.auth.getUser();
-      const ext = file.name.split(".").pop() ?? "png";
-      const path = `${auth.user!.id}/${orderId}.${ext}`;
-      const { error } = await supabase.storage.from("payment-proofs").upload(path, file, { upsert: true });
-      if (error) throw new Error(error.message);
-      await submitProof({ data: { orderId, path, origin: window.location.origin } });
+      const { compressImage } = await import("@/lib/local-db");
+      const proofDataUrl = await compressImage(file);
+      await submitProof({ data: { orderId, proofDataUrl, origin: window.location.origin } });
       setStep(4);
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Upload failed");
@@ -107,6 +104,7 @@ function CheckoutPage() {
       setBusy(false);
     }
   }
+
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-14">
