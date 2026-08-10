@@ -7,7 +7,7 @@ import { createOrder, submitPaymentProof } from "@/lib/orders.functions";
 import { getMyProfile } from "@/lib/free.functions";
 import { findPlan, PAY_METHODS, UPI_QR, BUDGET_PLANS } from "@/lib/constants";
 import { useCurrency } from "@/lib/currency";
-import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
