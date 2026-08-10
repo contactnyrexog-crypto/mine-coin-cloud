@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { useServerFn } from "@tanstack/react-start";
+import { useServerFn } from "@/lib/local-fn";
 import { toast } from "sonner";
 import { CheckCircle2, Upload } from "lucide-react";
 import { createOrder, submitPaymentProof } from "@/lib/orders.functions";

@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
+import { useServerFn } from "@/lib/local-fn";
 import { toast } from "sonner";
 import { claimAfk, startAfk } from "@/lib/free.functions";
 import { Button } from "@/components/ui/button";

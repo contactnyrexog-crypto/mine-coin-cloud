@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
+import { useServerFn } from "@/lib/local-fn";
 import { toast } from "sonner";
 import { Download } from "lucide-react";
 import { listMyOrders, provisionMinecraftOrder } from "@/lib/orders.functions";
