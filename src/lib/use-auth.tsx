@@ -1,22 +1,30 @@
 import { useEffect, useState } from "react";
-import type { Session, User } from "@supabase/supabase-js";
-import { supabase } from "@/integrations/supabase/client";
+import { getSession, isAdmin, type SessionUser } from "@/lib/local-db";
 
+/**
+ * Session state for the local account store. Reads are deferred to an effect so
+ * server-rendered markup and the first client render agree.
+ */
 export function useAuth() {
-  const [session, setSession] = useState<Session | null>(null);
+  const [user, setUser] = useState<SessionUser | null>(null);
+  const [admin, setAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => {
-      setSession(s);
+    const sync = () => {
+      const s = getSession();
+      setUser(s);
+      setAdmin(s ? isAdmin(s.id) : false);
       setLoading(false);
-    });
-    supabase.auth.getSession().then(({ data }) => {
-      setSession(data.session);
-      setLoading(false);
-    });
-    return () => sub.subscription.unsubscribe();
+    };
+    sync();
+    window.addEventListener("nethost:auth", sync);
+    window.addEventListener("storage", sync);
+    return () => {
+      window.removeEventListener("nethost:auth", sync);
+      window.removeEventListener("storage", sync);
+    };
   }, []);
 
-  return { session, user: (session?.user ?? null) as User | null, loading };
+  return { user, isAdmin: admin, loading };
 }
