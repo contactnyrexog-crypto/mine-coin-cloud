@@ -93,11 +93,18 @@ function AdminOrderCard({ order, focus }: { order: any; focus?: string | undefin
         <span className="font-display text-sm font-bold uppercase text-primary">{order.status}</span>
       </div>
 
-      {order.proof_url && (
-        <a href={order.proof_url} target="_blank" rel="noreferrer noopener">
-          <img src={order.proof_url} alt="Payment proof" className="max-h-56 rounded-lg border border-border" />
+      {proof ? (
+        <a href={proof} target="_blank" rel="noreferrer noopener">
+          <img src={proof} alt="Payment proof" className="max-h-56 rounded-lg border border-border" />
         </a>
+      ) : (
+        order.proof_url && (
+          <p className="text-xs text-muted-foreground">
+            Screenshot was uploaded from another browser, so it isn't available here.
+          </p>
+        )
       )}
+
 
       {order.reject_reason && (
         <p className="text-sm text-destructive">Reject reason: {order.reject_reason}</p>
