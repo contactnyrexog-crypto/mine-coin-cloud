@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Menu, X, ShoppingCart, ChevronDown, Trash2, Minus, Plus } from "lucide-react";
 import { signOutLocal } from "@/lib/local-db";
 import { useAuth } from "@/lib/use-auth";
