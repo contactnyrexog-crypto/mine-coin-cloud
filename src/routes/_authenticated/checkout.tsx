@@ -8,7 +8,7 @@ import { getMyProfile } from "@/lib/free.functions";
 import { findPlan, PAY_METHODS, UPI_QR, BUDGET_PLANS } from "@/lib/constants";
 import { useCurrency } from "@/lib/currency";
 import { Button } from "@/components/ui/button";
-import { Button } from "@/components/ui/button";
+
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
