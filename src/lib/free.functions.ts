@@ -11,7 +11,7 @@ import {
   type ServerRow,
 } from "@/lib/local-db";
 
-export async function getMyProfile() {
+export async function getMyProfile(_?: unknown) {
   const s = requireSession();
   const profile = ensureProfile(s.id, s.email);
   return { profile, isAdmin: isAdmin(s.id) };
@@ -33,7 +33,7 @@ export async function saveBilling({ data }: { data: { email: string; address: st
   return { ok: true };
 }
 
-export async function claimAfk() {
+export async function claimAfk(_?: unknown) {
   const s = requireSession();
   const profile = ensureProfile(s.id, s.email);
 
@@ -52,7 +52,7 @@ export async function claimAfk() {
   return { awarded, coins };
 }
 
-export async function startAfk() {
+export async function startAfk(_?: unknown) {
   const s = requireSession();
   ensureProfile(s.id, s.email);
   updateProfile(s.id, { last_afk_credit: now() });
@@ -133,7 +133,7 @@ export async function redeemCode({ data }: { data: { code: string } }) {
   };
 }
 
-export async function listMyServers(): Promise<ServerRow[]> {
+export async function listMyServers(_?: unknown): Promise<ServerRow[]> {
   const s = requireSession();
   return query((db) =>
     db.servers
