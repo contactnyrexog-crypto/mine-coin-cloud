@@ -1,197 +1,196 @@
-import { createServerFn } from "@tanstack/react-start";
-import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { z } from "zod";
+import { isAdmin, now, query, requireSession, tx, uid, type Profile, type Order, type RedeemCode } from "@/lib/local-db";
 
-async function assertAdmin(context: { supabase: any; userId: string }) {
-  const { data } = await context.supabase.rpc("has_role", { _user_id: context.userId, _role: "admin" });
-  if (!data) throw new Error("Forbidden");
+/**
+ * Admin tools operate on this browser's local store only.
+ *
+ * There is no shared server database any more, so an admin sees the accounts
+ * and orders created in the browser they are sitting at — not those of
+ * customers on their own devices.
+ */
+function assertAdmin() {
+  const s = requireSession();
+  if (!isAdmin(s.id)) throw new Error("Forbidden");
+  return s;
 }
 
-export const adminListUsers = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
-  .handler(async ({ context }) => {
-    await assertAdmin(context);
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data } = await supabaseAdmin
-      .from("profiles")
-      .select("*")
-      .order("created_at", { ascending: false })
-      .limit(500);
-    return data ?? [];
-  });
+export async function adminListUsers(_?: unknown): Promise<Profile[]> {
+  assertAdmin();
+  return query((db) =>
+    [...db.profiles].sort((a, b) => b.created_at.localeCompare(a.created_at)).slice(0, 500),
+  );
+}
 
-export const adminGrant = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
-  .inputValidator((d: { userId: string; coins: number; ram: number; disk: number; cpu: number }) =>
-    z
-      .object({
-        userId: z.string().uuid(),
-        coins: z.number().int().min(-1000000).max(1000000),
-        ram: z.number().int().min(-1000000).max(1000000),
-        disk: z.number().int().min(-100000).max(100000),
-        cpu: z.number().int().min(-100000).max(100000),
-      })
-      .parse(d),
-  )
-  .handler(async ({ data, context }) => {
-    await assertAdmin(context);
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: p } = await supabaseAdmin
-      .from("profiles")
-      .select("coins,ram_mb,disk_gb,cpu_percent")
-      .eq("id", data.userId)
-      .maybeSingle();
+export async function adminGrant({
+  data,
+}: {
+  data: { userId: string; coins: number; ram: number; disk: number; cpu: number };
+}) {
+  const parsed = z
+    .object({
+      userId: z.string().min(8).max(64),
+      coins: z.number().int().min(-1000000).max(1000000),
+      ram: z.number().int().min(-1000000).max(1000000),
+      disk: z.number().int().min(-100000).max(100000),
+      cpu: z.number().int().min(-100000).max(100000),
+    })
+    .parse(data);
+  assertAdmin();
+
+  tx((db) => {
+    const p = db.profiles.find((x) => x.id === parsed.userId);
     if (!p) throw new Error("User not found");
-    await supabaseAdmin
-      .from("profiles")
-      .update({
-        coins: Math.max(0, p.coins + data.coins),
-        ram_mb: Math.max(0, p.ram_mb + data.ram),
-        disk_gb: Math.max(0, p.disk_gb + data.disk),
-        cpu_percent: Math.max(0, p.cpu_percent + data.cpu),
-      })
-      .eq("id", data.userId);
-    return { ok: true };
+    p.coins = Math.max(0, p.coins + parsed.coins);
+    p.ram_mb = Math.max(0, p.ram_mb + parsed.ram);
+    p.disk_gb = Math.max(0, p.disk_gb + parsed.disk);
+    p.cpu_percent = Math.max(0, p.cpu_percent + parsed.cpu);
+    p.updated_at = now();
   });
+  return { ok: true };
+}
 
-export const adminListCodes = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
-  .handler(async ({ context }) => {
-    await assertAdmin(context);
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data } = await supabaseAdmin
-      .from("redeem_codes")
-      .select("*")
-      .order("created_at", { ascending: false });
-    return data ?? [];
-  });
+export async function adminListCodes(_?: unknown): Promise<RedeemCode[]> {
+  assertAdmin();
+  return query((db) =>
+    [...db.redeem_codes].sort((a, b) => b.created_at.localeCompare(a.created_at)),
+  );
+}
 
-export const adminCreateCode = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
-  .inputValidator(
-    (d: {
-      code: string;
-      kind: string;
-      coins: number;
-      ram: number;
-      disk: number;
-      cpu: number;
-      discountPercent: number;
-      discountInr: number;
-      usesPerUser: number;
-      maxUses: number;
-    }) =>
-      z
-        .object({
-          code: z.string().trim().min(2).max(64),
-          kind: z.enum(["free", "minecraft"]),
-          coins: z.number().int().min(0).max(1000000),
-          ram: z.number().int().min(0).max(1000000),
-          disk: z.number().int().min(0).max(100000),
-          cpu: z.number().int().min(0).max(100000),
-          discountPercent: z.number().min(0).max(100),
-          discountInr: z.number().min(0).max(1000000),
-          usesPerUser: z.number().int().min(1).max(1000),
-          maxUses: z.number().int().min(1).max(1000000),
-        })
-        .parse(d),
-  )
-  .handler(async ({ data, context }) => {
-    await assertAdmin(context);
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { error } = await supabaseAdmin.from("redeem_codes").insert({
-      code: data.code.toUpperCase(),
-      kind: data.kind,
-      coins: data.coins,
-      ram_mb: data.ram,
-      disk_gb: data.disk,
-      cpu_percent: data.cpu,
-      discount_percent: data.discountPercent,
-      discount_inr: data.discountInr,
-      uses_per_user: data.usesPerUser,
-      max_uses: data.maxUses,
+export async function adminCreateCode({
+  data,
+}: {
+  data: {
+    code: string;
+    kind: string;
+    coins: number;
+    ram: number;
+    disk: number;
+    cpu: number;
+    discountPercent: number;
+    discountInr: number;
+    usesPerUser: number;
+    maxUses: number;
+  };
+}) {
+  const parsed = z
+    .object({
+      code: z.string().trim().min(2).max(64),
+      kind: z.enum(["free", "minecraft"]),
+      coins: z.number().int().min(0).max(1000000),
+      ram: z.number().int().min(0).max(1000000),
+      disk: z.number().int().min(0).max(100000),
+      cpu: z.number().int().min(0).max(100000),
+      discountPercent: z.number().min(0).max(100),
+      discountInr: z.number().min(0).max(1000000),
+      usesPerUser: z.number().int().min(1).max(1000),
+      maxUses: z.number().int().min(1).max(1000000),
+    })
+    .parse(data);
+  assertAdmin();
+
+  const code = parsed.code.toUpperCase();
+  const clash = query((db) => db.redeem_codes.some((c) => c.code === code));
+  if (clash) throw new Error("That code already exists.");
+
+  tx((db) => {
+    db.redeem_codes.push({
+      id: uid(),
+      code,
+      kind: parsed.kind,
+      coins: parsed.coins,
+      ram_mb: parsed.ram,
+      disk_gb: parsed.disk,
+      cpu_percent: parsed.cpu,
+      discount_percent: parsed.discountPercent,
+      discount_inr: parsed.discountInr,
+      uses_per_user: parsed.usesPerUser,
+      max_uses: parsed.maxUses,
+      used_count: 0,
+      active: true,
+      created_at: now(),
+      updated_at: now(),
     });
-    if (error) throw new Error(error.message);
-    return { ok: true };
   });
+  return { ok: true };
+}
 
-export const adminToggleCode = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
-  .inputValidator((d: { id: string; active: boolean }) =>
-    z.object({ id: z.string().uuid(), active: z.boolean() }).parse(d),
-  )
-  .handler(async ({ data, context }) => {
-    await assertAdmin(context);
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    await supabaseAdmin.from("redeem_codes").update({ active: data.active }).eq("id", data.id);
-    return { ok: true };
-  });
-
-export const adminListOrders = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
-  .handler(async ({ context }) => {
-    await assertAdmin(context);
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data } = await supabaseAdmin
-      .from("orders")
-      .select("*")
-      .order("created_at", { ascending: false })
-      .limit(500);
-    return data ?? [];
-  });
-
-export const adminDecideOrder = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
-  .inputValidator(
-    (d: {
-      orderId: string;
-      action: string;
-      reason?: string;
-      username?: string;
-      ip?: string;
-      location?: string;
-      keyUrl?: string;
-    }) =>
-      z
-        .object({
-          orderId: z.string().uuid(),
-          action: z.enum(["accept", "reject"]),
-          reason: z.string().max(500).optional(),
-          username: z.string().max(120).optional(),
-          ip: z.string().max(120).optional(),
-          location: z.string().max(120).optional(),
-          keyUrl: z.string().max(500).optional(),
-        })
-        .parse(d),
-  )
-  .handler(async ({ data, context }) => {
-    await assertAdmin(context);
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: order } = await supabaseAdmin.from("orders").select("*").eq("id", data.orderId).maybeSingle();
-    if (!order) throw new Error("Order not found");
-
-    if (data.action === "reject") {
-      if (!data.reason?.trim()) throw new Error("A rejection reason is required.");
-      await supabaseAdmin
-        .from("orders")
-        .update({ status: "rejected", reject_reason: data.reason.trim() })
-        .eq("id", order.id);
-      return { ok: true };
+export async function adminToggleCode({ data }: { data: { id: string; active: boolean } }) {
+  const parsed = z.object({ id: z.string().min(8).max(64), active: z.boolean() }).parse(data);
+  assertAdmin();
+  tx((db) => {
+    const c = db.redeem_codes.find((x) => x.id === parsed.id);
+    if (c) {
+      c.active = parsed.active;
+      c.updated_at = now();
     }
-
-    const delivery =
-      order.product_type === "vps"
-        ? {
-            username: data.username ?? "",
-            ip: data.ip ?? "",
-            location: data.location ?? "",
-            keyUrl: data.keyUrl ?? "",
-          }
-        : order.delivery;
-
-    await supabaseAdmin
-      .from("orders")
-      .update({ status: "accepted", reject_reason: null, delivery })
-      .eq("id", order.id);
-    return { ok: true };
   });
+  return { ok: true };
+}
+
+export async function adminListOrders(_?: unknown): Promise<Order[]> {
+  assertAdmin();
+  return query((db) =>
+    [...db.orders].sort((a, b) => b.created_at.localeCompare(a.created_at)).slice(0, 500),
+  );
+}
+
+export async function adminDecideOrder({
+  data,
+}: {
+  data: {
+    orderId: string;
+    action: string;
+    reason?: string;
+    username?: string;
+    ip?: string;
+    location?: string;
+    keyUrl?: string;
+  };
+}) {
+  const parsed = z
+    .object({
+      orderId: z.string().min(8).max(64),
+      action: z.enum(["accept", "reject"]),
+      reason: z.string().max(500).optional(),
+      username: z.string().max(120).optional(),
+      ip: z.string().max(120).optional(),
+      location: z.string().max(120).optional(),
+      keyUrl: z.string().max(500).optional(),
+    })
+    .parse(data);
+  assertAdmin();
+
+  const order = query((db) => db.orders.find((o) => o.id === parsed.orderId));
+  if (!order) throw new Error("Order not found");
+
+  if (parsed.action === "reject") {
+    if (!parsed.reason?.trim()) throw new Error("A rejection reason is required.");
+    tx((db) => {
+      const o = db.orders.find((x) => x.id === order.id);
+      if (o) {
+        o.status = "rejected";
+        o.reject_reason = parsed.reason!.trim();
+        o.updated_at = now();
+      }
+    });
+    return { ok: true };
+  }
+
+  tx((db) => {
+    const o = db.orders.find((x) => x.id === order.id);
+    if (!o) return;
+    o.status = "accepted";
+    o.reject_reason = null;
+    o.delivery =
+      o.product_type === "vps"
+        ? {
+            username: parsed.username ?? "",
+            ip: parsed.ip ?? "",
+            location: parsed.location ?? "",
+            keyUrl: parsed.keyUrl ?? "",
+          }
+        : o.delivery;
+    o.updated_at = now();
+  });
+  return { ok: true };
+}
