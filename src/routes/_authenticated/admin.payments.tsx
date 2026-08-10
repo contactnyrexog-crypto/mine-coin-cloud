@@ -1,9 +1,10 @@
 import { createFileRoute, useSearch } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
+import { useServerFn } from "@/lib/local-fn";
 import { toast } from "sonner";
 import { adminListOrders, adminDecideOrder } from "@/lib/admin.functions";
+import { getProofImage } from "@/lib/orders.functions";
 import { CURRENCIES } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -67,7 +68,10 @@ function AdminOrderCard({ order, focus }: { order: any; focus?: string | undefin
     }
   }
 
+  const proof = getProofImage(order.id);
+
   return (
+
     <div className="panel space-y-4 p-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
@@ -93,11 +97,18 @@ function AdminOrderCard({ order, focus }: { order: any; focus?: string | undefin
         <span className="font-display text-sm font-bold uppercase text-primary">{order.status}</span>
       </div>
 
-      {order.proof_url && (
-        <a href={order.proof_url} target="_blank" rel="noreferrer noopener">
-          <img src={order.proof_url} alt="Payment proof" className="max-h-56 rounded-lg border border-border" />
+      {proof ? (
+        <a href={proof} target="_blank" rel="noreferrer noopener">
+          <img src={proof} alt="Payment proof" className="max-h-56 rounded-lg border border-border" />
         </a>
+      ) : (
+        order.proof_url && (
+          <p className="text-xs text-muted-foreground">
+            Screenshot was uploaded from another browser, so it isn't available here.
+          </p>
+        )
       )}
+
 
       {order.reject_reason && (
         <p className="text-sm text-destructive">Reject reason: {order.reject_reason}</p>

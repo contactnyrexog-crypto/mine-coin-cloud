@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate, useSearch } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
+import { signInLocal, signUpLocal } from "@/lib/local-db";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -32,20 +32,15 @@ function AuthPage() {
     setBusy(true);
     try {
       if (mode === "in") {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
+        await signInLocal(email, password);
         toast.success("Welcome back!");
         const to = redirect && redirect.startsWith("/") ? redirect : "/free";
         window.location.href = to;
       } else {
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: { emailRedirectTo: window.location.origin },
-        });
-        if (error) throw error;
-        toast.success("Account created. Check your email to confirm, then sign in.");
-        setMode("in");
+        await signUpLocal(email, password);
+        await signInLocal(email, password);
+        toast.success("Account created.");
+        window.location.href = "/free";
       }
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Something went wrong");
@@ -58,7 +53,7 @@ function AuthPage() {
     <div className="mx-auto flex max-w-md flex-col px-4 py-20">
       <h1 className="font-display text-3xl font-bold">{mode === "in" ? "Sign in" : "Create account"}</h1>
       <p className="mt-2 text-sm text-muted-foreground">
-        One account for the free panel, Minecraft plans and VPS orders.
+        Accounts are stored in this browser only — use the same browser and device to sign back in.
       </p>
       <form onSubmit={submit} className="panel mt-8 space-y-4 p-6">
         <div className="space-y-2">

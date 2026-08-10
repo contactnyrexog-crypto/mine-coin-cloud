@@ -1,14 +1,14 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { useServerFn } from "@tanstack/react-start";
+import { useServerFn } from "@/lib/local-fn";
 import { toast } from "sonner";
 import { CheckCircle2, Upload } from "lucide-react";
 import { createOrder, submitPaymentProof } from "@/lib/orders.functions";
 import { getMyProfile } from "@/lib/free.functions";
 import { findPlan, PAY_METHODS, UPI_QR, BUDGET_PLANS } from "@/lib/constants";
 import { useCurrency } from "@/lib/currency";
-import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
+
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -94,12 +94,9 @@ function CheckoutPage() {
     if (!file || !orderId) return;
     setBusy(true);
     try {
-      const { data: auth } = await supabase.auth.getUser();
-      const ext = file.name.split(".").pop() ?? "png";
-      const path = `${auth.user!.id}/${orderId}.${ext}`;
-      const { error } = await supabase.storage.from("payment-proofs").upload(path, file, { upsert: true });
-      if (error) throw new Error(error.message);
-      await submitProof({ data: { orderId, path, origin: window.location.origin } });
+      const { compressImage } = await import("@/lib/local-db");
+      const proofDataUrl = await compressImage(file);
+      await submitProof({ data: { orderId, proofDataUrl, origin: window.location.origin } });
       setStep(4);
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Upload failed");
@@ -107,6 +104,7 @@ function CheckoutPage() {
       setBusy(false);
     }
   }
+
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-14">

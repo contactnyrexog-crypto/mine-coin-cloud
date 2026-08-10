@@ -1,5 +1,5 @@
 import { createFileRoute, Link, Outlet, redirect } from "@tanstack/react-router";
-import { supabase } from "@/integrations/supabase/client";
+import { getSession, isAdmin } from "@/lib/local-db";
 
 const TABS = [
   { to: "/admin/payments" as const, label: "Payments" },
@@ -8,11 +8,10 @@ const TABS = [
 ];
 
 export const Route = createFileRoute("/_authenticated/admin")({
-  beforeLoad: async () => {
-    const { data: auth } = await supabase.auth.getUser();
-    if (!auth.user) throw redirect({ to: "/auth" });
-    const { data } = await supabase.from("user_roles").select("role").eq("user_id", auth.user.id);
-    if (!(data ?? []).some((r) => r.role === "admin")) throw redirect({ to: "/" });
+  beforeLoad: () => {
+    const user = getSession();
+    if (!user) throw redirect({ to: "/auth" });
+    if (!isAdmin(user.id)) throw redirect({ to: "/" });
   },
   component: AdminLayout,
 });
