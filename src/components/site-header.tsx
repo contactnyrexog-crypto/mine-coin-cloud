@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Menu, X, ShoppingCart, ChevronDown, Trash2, Minus, Plus } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { signOutLocal } from "@/lib/local-db";
 import { useAuth } from "@/lib/use-auth";
 import { useCurrency } from "@/lib/currency";
 import { useCart } from "@/lib/cart";
@@ -31,31 +31,18 @@ const LINKS = [
 ] as const;
 
 export function SiteHeader() {
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
   const { currency, setCurrency, price } = useCurrency();
   const cart = useCart();
   const [open, setOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
   const qc = useQueryClient();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!user) {
-      setIsAdmin(false);
-      return;
-    }
-    supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", user.id)
-      .then(({ data }) => setIsAdmin((data ?? []).some((r) => r.role === "admin")));
-  }, [user]);
 
   async function signOut() {
     await qc.cancelQueries();
     qc.clear();
-    await supabase.auth.signOut();
+    signOutLocal();
     navigate({ to: "/auth", replace: true });
   }
 
